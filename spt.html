@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+        }
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #000000 0%, #121212 100%);
+        }
+        .main-gradient {
+            background: linear-gradient(180deg, #1e3a5f 0%, #121212 40%);
+        }
+        .card-hover {
+            transition: background-color 0.2s;
+        }
+        .card-hover:hover {
+            background-color: #2a2a2a;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .play-button {
+            box-shadow: 0 8px 16px rgba(0,0,0,.3);
+            transition: all 0.2s;
+        }
+        .play-button:hover {
+            transform: scale(1.05);
+        }
+        .progress-bar {
+            height: 4px;
+            background: #4d4d4d;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #1db954;
+            transition: width 0.1s linear;
+        }
+        .volume-slider {
+            -webkit-appearance: none;
+            background: #4d4d4d;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .nav-item {
+            transition: color 0.2s;
+        }
+        .nav-item:hover {
+            color: white;
+        }
+        .liked-gradient {
+            background: linear-gradient(135deg, #450af5, #c4efd9);
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 sidebar-gradient flex flex-col p-6">
+            <div class="mb-8">
+                <svg viewBox="0 0 1134 340" class="h-10 w-32 fill-white">
+                    <path d="M8 171c0 92 76 168 168 168s168-76 168-168S268 4 176 4 8 79 8 171zm230 78c-39-24-89-30-147-17-14 2-16-18-4-20 64-15 118-8 162 19 11 7 0 24-11 18zm17-45c-45-28-114-36-167-20-17 5-23-21-7-25 61-18 136-9 188 23 14 9 0 31-14 22zM80 133c-17 6-28-23-9-30 59-18 159-15 221 22 17 9 1 37-17 27-54-32-144-35-195-19zm379 91c-17 0-33-6-47-20-1 0-1 1-1 1l-16 19c-1 1-1 2 0 3 18 16 40 24 64 24 34 0 55-19 55-47 0-24-15-37-50-46-29-7-34-12-34-22s10-16 23-16 25 5 39 15c0 0 1 1 2 1s1-1 1-1l14-20c1-1 1-1 0-2-16-13-35-20-56-20-31 0-53 19-53 46 0 29 20 38 52 46 28 6 32 12 32 22 0 11-10 17-25 17zm95-77v-13c0-1-1-2-2-2h-26c-1 0-2 1-2 2v147c0 1 1 2 2 2h26c1 0 2-1 2-2v-46c10 11 21 16 36 16 27 0 54-21 54-61s-27-60-54-60c-15 0-26 5-36 17zm30 78c-18 0-31-15-31-35s13-34 31-34 30 14 30 34-12 35-30 35zm68-34c0 34 27 60 62 60s62-27 62-61-26-60-61-60-63 27-63 61zm30 0c0-20 13-34 32-34s33 15 33 35-13 34-32 34-33-15-33-35zm140-58v-29c0-1 0-2-1-2h-26c-1 0-2 1-2 2v29h-13c-1 0-2 1-2 2v22c0 1 1 2 2 2h13v58c0 23 11 35 34 35 9 0 18-2 25-6 1 0 1-1 1-2v-21c0-1 0-2-1-2h-2c-5 3-11 4-16 4-8 0-12-4-12-12v-54h30c1 0 2-1 2-2v-22c0-1-1-2-2-2h-30zm129-3c0-11 4-15 13-15 5 0 10 0 15 2h1s1-1 1-2V93c0-1 0-2-1-2-5-2-12-3-22-3-24 0-36 14-36 39v5h-13c-1 0-2 1-2 2v22c0 1 1 2 2 2h13v89c0 1 1 2 2 2h26c1 0 1-1 1-2v-89h25l37 89c-4 9-8 11-14 11-5 0-10-1-15-4h-1l-1 1-9 19c0 1 0 3 1 3 9 5 17 7 27 7 19 0 30-9 39-33l45-116v-2c0-1-1-1-2-1h-27c-1 0-1 1-1 2l-28 78-30-78c0-1-1-2-2-2h-44v-3zm-83 3c-1 0-2 1-2 2v113c0 1 1 2 2 2h26c1 0 1-1 1-2V134c0-1 0-2-1-2h-26zm-6-33c0 10 9 19 19 19s18-9 18-19-8-18-18-18-19 8-19 18zm245 69c10 0 19-8 19-18s-9-18-19-18-18 8-18 18 8 18 18 18zm0-34c9 0 17 7 17 16s-8 16-17 16-16-7-16-16 7-16 16-16zm4 18c3-1 5-3 5-6 0-4-4-6-8-6h-8v19h4v-6h4l4 6h5zm-3-9c2 0 4 1 4 3s-2 3-4 3h-4v-6h4z"/>
+                </svg>
+            </div>
+            
+            <nav class="space-y-4 flex-1">
+                <a href="#" onclick="showView('home')" class="flex items-center space-x-4 nav-item text-gray-300 font-semibold">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6h6v6h4v-8h3L12 3 2 11h3v8z"/></svg>
+                    <span>Home</span>
+                </a>
+                <a href="#" onclick="showView('search')" class="flex items-center space-x-4 nav-item text-gray-300 font-semibold">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <span>Search</span>
+                </a>
+                <a href="#" onclick="showView('library')" class="flex items-center space-x-4 nav-item text-gray-300 font-semibold">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                    <span>Your Library</span>
+                </a>
+                
+                <div class="pt-4 space-y-2" id="playlistSidebar">
+                    <!-- Playlists will be added here -->
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar -->
+            <div class="h-16 bg-black bg-opacity-60 backdrop-blur-md flex items-center justify-between px-8">
+                <div class="flex space-x-4">
+                    <button class="w-8 h-8 rounded-full bg-black bg-opacity-70 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-black bg-opacity-70 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </button>
+                </div>
+                
+                <div class="flex-1 max-w-lg mx-8" id="searchBar" style="display: none;">
+                    <input type="text" id="searchInput" placeholder="What do you want to listen to?" 
+                           class="w-full px-4 py-2 rounded-full bg-white text-black placeholder-gray-600 focus:outline-none"
+                           oninput="performSearch(this.value)">
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto scrollbar-hide" id="mainContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Bar -->
+    <div class="h-24 bg-black border-t border-gray-900 flex items-center px-4" id="playerBar">
+        <div class="flex-1 flex items-center space-x-4">
+            <img id="currentAlbumArt" src="" alt="" class="w-14 h-14 rounded hidden">
+            <div id="currentTrackInfo" class="hidden">
+                <div class="font-semibold text-sm" id="currentTrackName"></div>
+                <div class="text-xs text-gray-400" id="currentArtistName"></div>
+            </div>
+            <button onclick="toggleLike()" id="likeButton" class="ml-4 hidden">
+                <svg class="w-5 h-5 text-gray-400 hover:text-white" id="likeIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex-1 max-w-2xl">
+            <div class="flex items-center justify-center space-x-4 mb-2">
+                <button onclick="shuffle()" class="text-gray-400 hover:text-white">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+                </button>
+                <button onclick="previousTrack()" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button onclick="togglePlayPause()" class="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105 transition play-button">
+                    <svg id="playIcon" class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pauseIcon" class="w-5 h-5 text-black hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button onclick="nextTrack()" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+                <button onclick="toggleRepeat()" class="text-gray-400 hover:text-white">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+                </button>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-400" id="currentTime">0:00</span>
+                <div class="flex-1 progress-bar cursor-pointer" onclick="seekTo(event)">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <span class="text-xs text-gray-400" id="totalTime">0:00</span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex items-center justify-end space-x-4">
+            <button class="text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+            </button>
+            <button class="text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7 6h10l-5.01 6.3L7 6zm-2.75-.39C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/></svg>
+            </button>
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            <input type="range" min="0" max="100" value="70" class="volume-slider w-24" oninput="setVolume(this.value)">
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // Data structure for all albums and songs with Google Drive links
+        const albums = [
+            {
+                id: 1,
+                title: "Playboi Carti",
+                artist: "Playboi Carti",
+                year: 2017,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX9tvwKm783bpIsu2vgKn_ZzLFapDX01lCHw&s",
+                driveLink: "https://drive.google.com/drive/folders/1MoUXckOBEG2bf4EVwfYhqg2QSNwJ6V-2",
+                songs: [
+                    {title: "Location", duration: "2:13"},
+                    {title: "Magnolia", duration: "3:01"},
+                    {title: "Lookin", duration: "2:45"},
+                    {title: "wokeuplikethis*", duration: "3:18"},
+                    {title: "Let It Go", duration: "3:17"},
+                    {title: "Half & Half", duration: "2:38"},
+                    {title: "New Choppa", duration: "2:30"},
+                    {title: "Other Shit", duration: "2:54"}
+                ]
+            },
+            {
+                id: 2,
+                title: "Die Lit",
+                artist: "Playboi Carti",
+                year: 2018,
+                cover: "https://meloman-bg.com/album_src/0602448608796.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1PC2R4G85g3uZMu1Mlp2DkPz3GwKG9HJy?usp=drive_link",
+                songs: [
+                    {title: "Long Time - Intro", duration: "3:17"},
+                    {title: "R.I.P.", duration: "3:11"},
+                    {title: "Lean 4 Real", duration: "3:03"},
+                    {title: "Shoota", duration: "3:22"},
+                    {title: "Right Now", duration: "2:29"}
+                ]
+            },
+            {
+                id: 3,
+                title: "Whole Lotta Red",
+                artist: "Playboi Carti",
+                year: 2020,
+                cover: "https://upload.wikimedia.org/wikipedia/en/6/6c/Playboi_Carti_-_Whole_Lotta_Red.png",
+                driveLink: "https://drive.google.com/drive/folders/1W1-fq8h-DOEIIDNdDH5ImIH7fVqXcFFN?usp=drive_link",
+                songs: [
+                    {title: "Rockstar Made", duration: "3:14"},
+                    {title: "Go2DaMoon", duration: "2:27"},
+                    {title: "Stop Breathing", duration: "3:34"},
+                    {title: "Beno!", duration: "2:33"},
+                    {title: "Sky", duration: "3:12"}
+                ]
+            },
+            {
+                id: 4,
+                title: "MUSIC",
+                artist: "Playboi Carti",
+                year: 2024,
+                cover: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Playboi_Carti_-_Music_album_cover.svg/1200px-Playboi_Carti_-_Music_album_cover.svg.png",
+                driveLink: "https://drive.google.com/drive/folders/1A9r8sVR9P-VMAJYx-96jyZ3K9wDm85Mp?usp=drive_link",
+                songs: [
+                    {title: "TIMELESS", duration: "4:18"},
+                    {title: "BACKR00MS", duration: "3:02"},
+                    {title: "EVIL J0RDAN", duration: "2:41"},
+                    {title: "H00DBYAIR", duration: "3:28"}
+                ]
+            },
+            {
+                id: 5,
+                title: "GNX",
+                artist: "Kendrick Lamar",
+                year: 2024,
+                cover: "https://i0.wp.com/thelumberjack.org/wp-content/uploads/2024/12/gnx-high-pixel-1.png?fit=2000%2C2000&ssl=1",
+                driveLink: "https://drive.google.com/drive/folders/1QnPAyKt-RvfXP4ykNuv4OIY8ucPfgLcj?usp=sharing",
+                songs: [
+                    {title: "wacced out murals", duration: "4:42"},
+                    {title: "squabble up", duration: "2:37"},
+                    {title: "luther", duration: "3:15"},
+                    {title: "man at the garden", duration: "3:17"},
+                    {title: "hey now", duration: "3:02"}
+                ]
+            },
+            {
+                id: 6,
+                title: "DAMN.",
+                artist: "Kendrick Lamar",
+                year: 2017,
+                cover: "https://cdn.theatlantic.com/thumbor/ivJJwtefH7h9H86OomCWarmDud8=/44x0:741x697/540x540/media/img/mt/2017/04/17494497_136168760253520_6389688645158174720_n-1/original.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1twO3fr4pgr7U9qOLei1Ew749k_HW2TLK?usp=sharing",
+                songs: [
+                    {title: "BLOOD.", duration: "1:58"},
+                    {title: "DNA.", duration: "3:05"},
+                    {title: "ELEMENT.", duration: "3:28"},
+                    {title: "HUMBLE.", duration: "2:57"},
+                    {title: "LOYALTY.", duration: "3:47"}
+                ]
+            },
+            {
+                id: 7,
+                title: "good kid, m.A.A.d city",
+                artist: "Kendrick Lamar",
+                year: 2012,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzhE_jaRNBIfjcjZWRlhq1ykZdzplr5qm6qQ&s",
+                driveLink: "https://drive.google.com/drive/folders/1v27OTSFLUOnblP2T0eJoG15GX-Y8wixj",
+                songs: [
+                    {title: "Sherane", duration: "4:32"},
+                    {title: "Bitch, Don't Kill My Vibe", duration: "5:10"},
+                    {title: "Backseat Freestyle", duration: "3:32"},
+                    {title: "Swimming Pools (Drank)", duration: "5:13"},
+                    {title: "m.A.A.d city", duration: "5:50"}
+                ]
+            },
+            {
+                id: 8,
+                title: "Flower Boy",
+                artist: "Tyler, The Creator",
+                year: 2017,
+                cover: "https://upload.wikimedia.org/wikipedia/en/c/c3/Tyler%2C_the_Creator_-_Flower_Boy.png",
+                driveLink: "https://drive.google.com/drive/folders/18-Ri0_hCVLsOdgSNi3geEG0Wlvi_iVQh",
+                songs: [
+                    {title: "Foreword", duration: "2:48"},
+                    {title: "Where This Flower Blooms", duration: "3:14"},
+                    {title: "See You Again", duration: "3:00"},
+                    {title: "911 / Mr. Lonely", duration: "5:37"},
+                    {title: "Boredom", duration: "5:39"}
+                ]
+            },
+            {
+                id: 9,
+                title: "IGOR",
+                artist: "Tyler, The Creator",
+                year: 2019,
+                cover: "https://upload.wikimedia.org/wikipedia/en/5/51/Igor_-_Tyler%2C_the_Creator.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1xjL4CdgN1akLg_IMiTX6ndJL8GWsHsV2?usp=sharing",
+                songs: [
+                    {title: "IGOR'S THEME", duration: "3:25"},
+                    {title: "EARFQUAKE", duration: "3:10"},
+                    {title: "I THINK", duration: "3:32"},
+                    {title: "EXACTLY WHAT YOU RUN FROM YOU END UP CHASING", duration: "1:28"},
+                    {title: "RUNNING OUT OF TIME", duration: "2:58"}
+                ]
+            },
+            {
+                id: 10,
+                title: "CHROMAKOPIA",
+                artist: "Tyler, The Creator",
+                year: 2024,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkaCIM3nxG-sDQ4AARqfk3szfLqdBcdTnH3w&s",
+                driveLink: "https://drive.google.com/drive/folders/1lnx2LyzZ9eXy6010WPNx_GxYKA2ARSwS?usp=sharing",
+                songs: [
+                    {title: "St. Chroma", duration: "3:22"},
+                    {title: "Rah Tah Tah", duration: "2:35"},
+                    {title: "Noid", duration: "4:44"},
+                    {title: "Darling, I", duration: "3:55"},
+                    {title: "Hey Jane", duration: "4:30"}
+                ]
+            },
+            {
+                id: 11,
+                title: "UTOPIA",
+                artist: "Travis Scott",
+                year: 2023,
+                cover: "https://m.media-amazon.com/images/I/51nMgSxPQeL._UF1000,1000_QL80_.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1F3BnKlVIe7nrXEG7HJvVfqQJZRvoHUb6?usp=sharing",
+                songs: [
+                    {title: "HYAENA", duration: "3:42"},
+                    {title: "THANK GOD", duration: "3:04"},
+                    {title: "MODERN JAM", duration: "4:15"},
+                    {title: "MY EYES", duration: "4:11"},
+                    {title: "FE!N", duration: "3:11"}
+                ]
+            },
+            {
+                id: 12,
+                title: "Blonde",
+                artist: "Frank Ocean",
+                year: 2016,
+                cover: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a0/Blonde_-_Frank_Ocean.jpeg/250px-Blonde_-_Frank_Ocean.jpeg",
+                driveLink: "https://drive.google.com/drive/folders/1Bdkq0xWccmzAAYN_ydiihJmAC083wFcy?usp=sharing",
+                songs: [
+                    {title: "Nikes", duration: "5:14"},
+                    {title: "Ivy", duration: "4:09"},
+                    {title: "Pink + White", duration: "3:04"},
+                    {title: "Solo", duration: "4:17"},
+                    {title: "Nights", duration: "5:07"}
+                ]
+            },
+            {
+                id: 13,
+                title: "Mr. Morale & The Big Steppers",
+                artist: "Kendrick Lamar",
+                year: 2022,
+                cover: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/Kendrick_Lamar_-_Mr._Morale_%26_the_Big_Steppers.png/250px-Kendrick_Lamar_-_Mr._Morale_%26_the_Big_Steppers.png",
+                driveLink: "https://drive.google.com/drive/folders/1sCELGQg8jT02b2aw66fnIPSjStb73XwA?usp=sharing",
+                songs: [
+                    {title: "United in Grief", duration: "4:12"},
+                    {title: "N95", duration: "3:14"},
+                    {title: "Worldwide Steppers", duration: "4:11"}
+                ]
+            },
+            {
+                id: 14,
+                title: "To Pimp A Butterfly",
+                artist: "Kendrick Lamar",
+                year: 2015,
+                cover: "https://upload.wikimedia.org/wikipedia/en/f/f6/Kendrick_Lamar_-_To_Pimp_a_Butterfly.png",
+                driveLink: "#",
+                songs: [
+                    {title: "Wesley's Theory", duration: "4:47"},
+                    {title: "King Kunta", duration: "3:54"},
+                    {title: "Alright", duration: "3:39"}
+                ]
+            },
+            {
+                id: 15,
+                title: "Overly Dedicated",
+                artist: "Kendrick Lamar",
+                year: 2010,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBPDm5Vs8UEMVqISi0PTI_Y9pnDf9aOV0WTg&s",
+                driveLink: "https://drive.google.com/drive/folders/1et6GEgWExnsqMDXdIoENHgSRqcDky4ER",
+                songs: [
+                    {title: "Ignorance is Bliss", duration: "3:42"},
+                    {title: "Michael Jordan", duration: "3:28"}
+                ]
+            },
+            {
+                id: 16,
+                title: "Wolf",
+                artist: "Tyler, The Creator",
+                year: 2013,
+                cover: "https://upload.wikimedia.org/wikipedia/en/f/fd/Wolf_Cover2.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1XO7eqE5AgfZi_BLUwHM1OysIWWoRik7q?usp=sharing",
+                songs: [
+                    {title: "Wolf", duration: "3:24"},
+                    {title: "Jamba", duration: "4:50"}
+                ]
+            },
+            {
+                id: 17,
+                title: "Bastard",
+                artist: "Tyler, The Creator",
+                year: 2009,
+                cover: "https://upload.wikimedia.org/wikipedia/en/9/9a/BASTARDCOVER.png",
+                driveLink: "#",
+                songs: [
+                    {title: "Bastard", duration: "5:41"},
+                    {title: "Seven", duration: "3:15"}
+                ]
+            },
+            {
+                id: 18,
+                title: "Cherry Bomb",
+                artist: "Tyler, The Creator",
+                year: 2015,
+                cover: "https://upload.wikimedia.org/wikipedia/en/thumb/2/26/Cherry_Bomb_Tyler_the_Creator.png/250px-Cherry_Bomb_Tyler_the_Creator.png",
+                driveLink: "https://drive.google.com/drive/folders/15tbYsgnxPfKJsmQHzx0cWuxPxnamx-EB?usp=sharing",
+                songs: [
+                    {title: "DEATHCAMP", duration: "2:24"},
+                    {title: "CHERRY BOMB", duration: "2:55"}
+                ]
+            },
+            {
+                id: 19,
+                title: "CALL ME IF YOU GET LOST",
+                artist: "Tyler, The Creator",
+                year: 2021,
+                cover: "https://upload.wikimedia.org/wikipedia/en/f/f1/Call_Me_If_You_Get_Lost_album_cover.jpg",
+                driveLink: "https://drive.google.com/drive/folders/15ipGIcZGn8jbc9J1MChZr2RkwSKRU_-g?usp=sharing",
+                songs: [
+                    {title: "SIR BAUDELAIRE", duration: "1:12"},
+                    {title: "CORSO", duration: "2:29"}
+                ]
+            },
+            {
+                id: 20,
+                title: "A Great Chaos",
+                artist: "Ken Carson",
+                year: 2023,
+                cover: "https://upload.wikimedia.org/wikipedia/en/f/f5/Ken_Carson_-_A_Great_Chaos.jpg",
+                driveLink: "#",
+                songs: [
+                    {title: "Fighting My Demons", duration: "2:48"}
+                ]
+            },
+            {
+                id: 21,
+                title: "Pink Tape",
+                artist: "Lil Uzi Vert",
+                year: 2023,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiY2TvlI-oFjfCTg2Yv7cQAZbN_3BkufKwZA&s",
+                driveLink: "https://drive.google.com/file/d/15E8XDN_o0OQ9TgNsWU2P6zZWi6R5FhjV/view",
+                songs: [
+                    {title: "Flooded the Face", duration: "3:12"}
+                ]
+            },
+            {
+                id: 22,
+                title: "? (Deluxe)",
+                artist: "XXXTentacion",
+                year: 2019,
+                cover: "https://khstreaty.com/wp-content/uploads/2019/09/questionmarkdeluxe-900x900.jpeg",
+                driveLink: "https://drive.google.com/drive/folders/1fKTBZd9uEaSUYUYmK1WPDC1ZRoxLLD1W?usp=sharing",
+                songs: [
+                    {title: "SAD!", duration: "2:46"},
+                    {title: "Moonlight", duration: "2:15"}
+                ]
+            },
+            {
+                id: 23,
+                title: "AI Youngboy",
+                artist: "NBA Youngboy",
+                year: 2017,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOZ2xC6VPfEJlL7_xcwVWywg-p4UdZa0gW1w&s",
+                driveLink: "https://drive.google.com/drive/folders/1Iu1c7SZmeXYIG4isolN7yTIU-Qq285Ci?usp=sharing",
+                songs: [
+                    {title: "Outside Today", duration: "3:03"}
+                ]
+            },
+            {
+                id: 24,
+                title: "AI Youngboy 2",
+                artist: "NBA Youngboy",
+                year: 2018,
+                cover: "https://upload.wikimedia.org/wikipedia/en/0/03/YoungBoy_Never_Broke_Again_-_AI_YoungBoy_2.png",
+                driveLink: "https://drive.google.com/drive/folders/1tYEr7T_XJyffckG_N-0sGaVw2ks75sZO",
+                songs: [
+                    {title: "Slime Belief", duration: "2:38"}
+                ]
+            },
+            {
+                id: 25,
+                title: "Top",
+                artist: "NBA Youngboy",
+                year: 2020,
+                cover: "https://upload.wikimedia.org/wikipedia/en/9/92/YoungBoy_Never_Broke_Again_-_Top.png",
+                driveLink: "https://drive.google.com/drive/folders/1m2RfmTDRaiQPMF3KLuglsB5kOwcCDhep?usp=sharing",
+                songs: [
+                    {title: "All In", duration: "2:26"}
+                ]
+            },
+            {
+                id: 26,
+                title: "MASA",
+                artist: "NBA Youngboy",
+                year: 2023,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXBLtgViciAoyg0SDTlgkBMwGuVYvZFagz4g&s",
+                driveLink: "https://drive.google.com/drive/folders/1u_Bs6oYHJnh4gYBgEaqa3fB8rNR0ERlR?usp=sharing",
+                songs: [
+                    {title: "Damage", duration: "3:15"}
+                ]
+            },
+            {
+                id: 27,
+                title: "Ghetto Gospel",
+                artist: "Rod Wave",
+                year: 2019,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1Qqy9H1W9e7KuWEzrsPIcn4tyA3grPqZzcQ&s",
+                driveLink: "https://drive.google.com/drive/folders/1g51oBbqCAnzHKzgUAMkojuDNUWp7l9dH?usp=sharing",
+                songs: [
+                    {title: "Heart on Ice", duration: "3:40"}
+                ]
+            },
+            {
+                id: 28,
+                title: "The Party Never Ends",
+                artist: "Juice WRLD",
+                year: 2024,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKJ1PaPANAeN5YklSRLF8EJ3W856SGyJyPSA&s",
+                driveLink: "https://drive.google.com/drive/folders/1ianVq6JL7qrWArr4LVYUtz7mOj4xUdUx?usp=sharing",
+                songs: [
+                    {title: "Lace It", duration: "3:12"}
+                ]
+            },
+            {
+                id: 29,
+                title: "Street Gossip",
+                artist: "Lil Baby",
+                year: 2018,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoXbMQinXaBkRwnjNl5g_O6a-zjONp_msVhw&s",
+                driveLink: "https://drive.google.com/drive/folders/11jJU7D4pgdViCoDzQBPP6v78XBdCELqW?usp=sharing",
+                songs: [
+                    {title: "Pure Cocaine", duration: "3:26"}
+                ]
+            },
+            {
+                id: 30,
+                title: "Graduation",
+                artist: "Kanye West",
+                year: 2007,
+                cover: "https://upload.wikimedia.org/wikipedia/en/thumb/7/70/Graduation_%28album%29.jpg/250px-Graduation_%28album%29.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1ofJuCepr47jBdfdupR5JlqOK-ZxueLMY?usp=sharing",
+                songs: [
+                    {title: "Good Morning", duration: "3:15"},
+                    {title: "Stronger", duration: "5:11"}
+                ]
+            },
+            {
+                id: 31,
+                title: "Sonic the Hedgehog OST",
+                artist: "Masato Nakamura",
+                year: 1991,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxDSvJbAjgLAkBUTrZBiOGmBhyJ7D3xla-g&s",
+                driveLink: "https://drive.google.com/drive/folders/1YRo2lSAbBfiO3QUMCnW4H0chTbXyxypc?usp=sharing",
+                songs: [
+                    {title: "Green Hill Zone", duration: "1:26"}
+                ]
+            },
+            {
+                id: 32,
+                title: "who really cares",
+                artist: "TV Girl",
+                year: 2016,
+                cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/57/TV_Girl_-_Who_Really_Cares.png/250px-TV_Girl_-_Who_Really_Cares.png",
+                driveLink: "https://drive.google.com/file/d/1XhFaFOZrBOTNUpHSma2QZE1tTMin5csS/view?usp=sharing",
+                songs: [
+                    {title: "Lovers Rock", duration: "3:35"}
+                ]
+            },
+            {
+                id: 33,
+                title: "The Death of Slim Shady",
+                artist: "Eminem",
+                year: 2024,
+                cover: "https://upload.wikimedia.org/wikipedia/en/4/4e/Eminem_-_The_Death_of_Slim_Shady_%28Coup_de_Gr%C3%A2ce%29.png",
+                driveLink: "#",
+                songs: [
+                    {title: "Renaissance", duration: "5:00"}
+                ]
+            },
+            {
+                id: 34,
+                title: "Swimming",
+                artist: "Mac Miller",
+                year: 2018,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNiFxzn3MAsEc3BtLmrMe9ADF76CZKLbPYsg&s",
+                driveLink: "https://drive.google.com/drive/folders/1GFZ8AVtfFpPt5cK8Cc0EnoA_oXX22Meo?usp=sharing",
+                songs: [
+                    {title: "Come Back to Earth", duration: "2:38"},
+                    {title: "Self Care", duration: "5:45"}
+                ]
+            },
+            {
+                id: 35,
+                title: "Undertale Soundtrack",
+                artist: "Toby Fox",
+                year: 2015,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbOjlbwCkvJIRvgVN3DMuPucvH7-DGqCjKuQ&s",
+                driveLink: "https://drive.google.com/drive/folders/14Um_gDFMwn9QE48qNt7DqJ_lBTdfVXAw?usp=sharing",
+                songs: [
+                    {title: "Megalovania", duration: "2:36"}
+                ]
+            },
+            {
+                id: 36,
+                title: "Deltarune OST",
+                artist: "Toby Fox",
+                year: 2018,
+                cover: "https://ia801504.us.archive.org/6/items/deltarune-soundtrack/artworks-bTsPLjXMTk0VXSpN-U0lTbw-t500x500.jpg?cnt=0",
+                driveLink: "https://drive.google.com/drive/folders/1-HXzBKhg22jhGa10n6NxYgG9Kpcmj20b?usp=sharing",
+                songs: [
+                    {title: "THE WORLD REVOLVING", duration: "2:56"}
+                ]
+            },
+            {
+                id: 37,
+                title: "DONT TAP THE GLASS",
+                artist: "Tyler, The Creator",
+                year: 2024,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnBYxj3M-kcbuJKZ07ij7kiXGs_rGpfMnGrQ&s",
+                driveLink: "#",
+                songs: [
+                    {title: "Track 1", duration: "3:00"}
+                ]
+            },
+            {
+                id: 38,
+                title: "Levon James",
+                artist: "King Von",
+                year: 2020,
+                cover: "https://upload.wikimedia.org/wikipedia/en/c/c2/King_Von_-_Levon_James.png",
+                driveLink: "#",
+                songs: [
+                    {title: "Armed & Dangerous", duration: "3:22"}
+                ]
+            },
+            {
+                id: 39,
+                title: "SOS",
+                artist: "SZA",
+                year: 2022,
+                cover: "https://upload.wikimedia.org/wikipedia/en/2/2c/SZA_-_S.O.S.png",
+                driveLink: "#",
+                songs: [
+                    {title: "Kill Bill", duration: "2:33"}
+                ]
+            },
+            {
+                id: 40,
+                title: "Hollow Knight OST",
+                artist: "Christopher Larkin",
+                year: 2017,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZNoYuqPOnfjLza73PEBItYZMIFZwEBhnENw&s",
+                driveLink: "https://drive.google.com/drive/folders/1TuLm0hpyYPmLl1V3od6cF5bctnWHskpF?usp=sharing",
+                songs: [
+                    {title: "Hornet", duration: "2:45"}
+                ]
+            },
+            {
+                id: 41,
+                title: "Pokemon Scarlet and Violet OST",
+                artist: "Game Freak",
+                year: 2022,
+                cover: "https://nu.vgmtreasurechest.com/soundtracks/pok-mon-scarlet-pok-mon-violet-2022/Cover.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1jXDDUG64pK4qKF7fs5_ph8S3BvgFrBjY?usp=sharing",
+                songs: [
+                    {title: "Battle! Gym Leader", duration: "3:20"}
+                ]
+            },
+            {
+                id: 42,
+                title: "Stepping In Blood",
+                artist: "Bloodhound Lil Jeff",
+                year: 2023,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE_19RFjiZBE1kINWXZ5XJsyJab1rMoBQbbw&s",
+                driveLink: "https://drive.google.com/drive/folders/1aGz7yM-AKZ0LthKkUTR4ehaSrj5NfO-l?usp=sharing",
+                songs: [
+                    {title: "Track 1", duration: "2:30"}
+                ]
+            },
+            {
+                id: 43,
+                title: "Cuphead OST",
+                artist: "Kristofer Maddigan",
+                year: 2017,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaFfTX2JSGLc7Vk_3zQKEFNyzypBW-ocVneQ&s",
+                driveLink: "https://drive.google.com/drive/folders/1WdAVnQnbDwUc0DCBUhjQO8oJG2Fk4UPD?usp=sharing",
+                songs: [
+                    {title: "Floral Fury", duration: "2:42"}
+                ]
+            },
+            {
+                id: 44,
+                title: "OMORI Soundtrack",
+                artist: "OMORI Sound Team",
+                year: 2020,
+                cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQap3kBsQPoReO8iIm4IqGEl3ZzzPi0MqSoBA&s",
+                driveLink: "https://drive.google.com/drive/folders/1EZEG6k9Ztt6I434UAhr42-YuXLmcbq6G?usp=sharing",
+                songs: [
+                    {title: "White Space", duration: "3:56"}
+                ]
+            },
+            {
+                id: 45,
+                title: "Pokemon Sun & Moon Collection",
+                artist: "Game Freak",
+                year: 2016,
+                cover: "https://is1-ssl.mzstatic.com/image/thumb/Music71/v4/ac/dc/74/acdc7457-354d-d88c-217f-72b4211e9390/859718498469_cover.jpg/600x600bf-60.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1oVYKpeo3WSPxsxIiqNEsCKYJJetiQQl0?usp=sharing",
+                songs: [
+                    {title: "Battle! Island Kahuna", duration: "2:48"}
+                ]
+            },
+            {
+                id: 46,
+                title: "Pokemon Ruby & Sapphire Collection",
+                artist: "Game Freak",
+                year: 2002,
+                cover: "https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/6c/e5/60/6ce56073-6c3c-f1c2-71fb-b67cf5a0524e/859711583056_cover.tif/600x600bf-60.jpg",
+                driveLink: "https://drive.google.com/drive/folders/1fn2WyKPhNZJFXhqS_OogI-2HHU4YaTJG?usp=drive_link",
+                songs: [
+                    {title: "Battle! Wild Pokemon", duration: "1:08"}
+                ]
+            }
+        ];
+
+        // State management
+        let currentView = 'home';
+        let currentAlbum = null;
+        let currentTrack = null;
+        let isPlaying = false;
+        let likedSongs = new Set();
+        let likedAlbums = new Set();
+        let playlists = [];
+        let queue = [];
+        let queueIndex = 0;
+        let isShuffled = false;
+        let repeatMode = 0; // 0: off, 1: repeat all, 2: repeat one
+        
+        const audio = document.getElementById('audioPlayer');
+
+        // Initialize
+        function init() {
+            showView('home');
+            loadLikedSongs();
+            loadLikedAlbums();
+            loadPlaylists();
+            
+            // Audio event listeners
+            audio.addEventListener('timeupdate', updateProgress);
+            audio.addEventListener('ended', handleTrackEnd);
+            audio.addEventListener('loadedmetadata', updateTotalTime);
+        }
+
+        // View management
+        function showView(view) {
+            currentView = view;
+            const content = document.getElementById('mainContent');
+            const searchBar = document.getElementById('searchBar');
+            
+            searchBar.style.display = view === 'search' ? 'block' : 'none';
+            
+            switch(view) {
+                case 'home':
+                    content.innerHTML = renderHome();
+                    break;
+                case 'search':
+                    content.innerHTML = renderSearch();
+                    break;
+                case 'library':
+                    content.innerHTML = renderLibrary();
+                    break;
+                case 'liked':
+                    content.innerHTML = renderLikedSongs();
+                    break;
+            }
+        }
+
+        function renderHome() {
+            return `
+                <div class="main-gradient p-8">
+                    <h1 class="text-4xl font-bold mb-8">Good afternoon</h1>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-8">
+                        ${albums.slice(0, 6).map(album => `
+                            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded flex items-center card-hover cursor-pointer group" onclick="playAlbum(${album.id})">
+                                <img src="${album.cover}" class="w-20 h-20 rounded-l" alt="${album.title}">
+                                <span class="px-4 font-semibold truncate flex-1">${album.title}</span>
+                                <button class="w-12 h-12 bg-green-500 rounded-full mr-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition play-button">
+                                    <svg class="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h2 class="text-2xl font-bold mb-4">Made For You</h2>
+                    <div class="grid grid-cols-6 gap-4">
+                        ${albums.map(album => `
+                            <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer group" onclick="showAlbum(${album.id})">
+                                <div class="relative mb-4">
+                                    <img src="${album.cover}" class="w-full aspect-square rounded-md" alt="${album.title}">
+                                    <button class="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition play-button" onclick="event.stopPropagation(); playAlbum(${album.id})">
+                                        <svg class="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </button>
+                                </div>
+                                <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                                <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSearch() {
+            return `
+                <div class="p-8">
+                    <h1 class="text-2xl font-bold mb-6">Search</h1>
+                    <div id="searchResults" class="grid grid-cols-6 gap-4">
+                        ${albums.map(album => `
+                            <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer group" onclick="showAlbum(${album.id})">
+                                <div class="relative mb-4">
+                                    <img src="${album.cover}" class="w-full aspect-square rounded-md" alt="${album.title}">
+                                    <button class="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition play-button" onclick="event.stopPropagation(); playAlbum(${album.id})">
+                                        <svg class="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </button>
+                                </div>
+                                <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                                <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function performSearch(query) {
+            if (!query) {
+                document.getElementById('searchResults').innerHTML = albums.map(album => `
+                    <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer" onclick="showAlbum(${album.id})">
+                        <img src="${album.cover}" class="w-full aspect-square rounded-md mb-4" alt="${album.title}">
+                        <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                        <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                    </div>
+                `).join('');
+                return;
+            }
+
+            const filtered = albums.filter(album => 
+                album.title.toLowerCase().includes(query.toLowerCase()) ||
+                album.artist.toLowerCase().includes(query.toLowerCase())
+            );
+
+            document.getElementById('searchResults').innerHTML = filtered.map(album => `
+                <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer" onclick="showAlbum(${album.id})">
+                    <img src="${album.cover}" class="w-full aspect-square rounded-md mb-4" alt="${album.title}">
+                    <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                    <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderLibrary() {
+            const likedAlbumsList = Array.from(likedAlbums).map(id => albums.find(a => a.id === parseInt(id)));
+            
+            return `
+                <div class="p-8">
+                    <h1 class="text-2xl font-bold mb-6">Your Library</h1>
+                    
+                    ${likedAlbumsList.length > 0 ? `
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold mb-4">Liked Albums</h2>
+                        <div class="grid grid-cols-6 gap-4">
+                            ${likedAlbumsList.map(album => `
+                                <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer group" onclick="showAlbum(${album.id})">
+                                    <div class="relative mb-4">
+                                        <img src="${album.cover}" class="w-full aspect-square rounded-md" alt="${album.title}">
+                                        <button class="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition play-button" onclick="event.stopPropagation(); playAlbum(${album.id})">
+                                            <svg class="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                        </button>
+                                    </div>
+                                    <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                                    <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold mb-4">Playlists</h2>
+                        ${playlists.length === 0 ? '<p class="text-gray-400 text-center py-8">No playlists yet. Create one!</p>' : ''}
+                        ${playlists.map((playlist, idx) => `
+                            <div class="flex items-center space-x-4 p-4 bg-gray-900 bg-opacity-40 rounded-lg hover:bg-opacity-60 cursor-pointer" onclick="showPlaylist(${idx})">
+                                <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-400 rounded flex items-center justify-center">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-semibold">${playlist.name}</h3>
+                                    <p class="text-sm text-gray-400">Playlist • ${playlist.albums.length} albums</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLikedSongs() {
+            const liked = Array.from(likedSongs).map(id => {
+                const [albumId, songIdx] = id.split('-').map(Number);
+                const album = albums.find(a => a.id === albumId);
+                return {album, song: album.songs[songIdx], songIdx, albumId};
+            });
+
+            return `
+                <div class="liked-gradient p-8">
+                    <div class="flex items-end space-x-6 mb-8">
+                        <div class="w-60 h-60 bg-gradient-to-br from-purple-800 to-blue-400 rounded shadow-2xl flex items-center justify-center">
+                            <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold mb-2">PLAYLIST</p>
+                            <h1 class="text-7xl font-black mb-6">Liked Songs</h1>
+                            <p class="text-sm"><span class="font-semibold">${liked.length} songs</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-black bg-opacity-30 p-8 rounded-lg">
+                        ${liked.length === 0 ? '<p class="text-gray-400 text-center py-12">No liked songs yet. Start liking songs!</p>' : ''}
+                        ${liked.map(({album, song, songIdx, albumId}, idx) => `
+                            <div class="flex items-center py-2 px-4 rounded hover:bg-white hover:bg-opacity-10 group cursor-pointer" onclick="playTrack(${albumId}, ${songIdx})">
+                                <span class="w-8 text-gray-400 text-sm">${idx + 1}</span>
+                                <div class="flex-1 flex items-center space-x-4 ml-4">
+                                    <img src="${album.cover}" class="w-10 h-10 rounded" alt="${album.title}">
+                                    <div>
+                                        <div class="font-semibold">${song.title}</div>
+                                        <div class="text-sm text-gray-400">${album.artist}</div>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-400">${album.title}</span>
+                                <button onclick="event.stopPropagation(); toggleLikeSong(${albumId}, ${songIdx})" class="mx-8">
+                                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                </button>
+                                <span class="w-16 text-right text-sm text-gray-400">${song.duration}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAlbum(albumId) {
+            const album = albums.find(a => a.id === albumId);
+            currentAlbum = album;
+            const isLiked = likedAlbums.has(albumId.toString());
+            
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="main-gradient p-8">
+                    <div class="flex items-end space-x-6 mb-8">
+                        <img src="${album.cover}" class="w-60 h-60 rounded shadow-2xl" alt="${album.title}">
+                        <div>
+                            <p class="text-sm font-semibold mb-2">ALBUM</p>
+                            <h1 class="text-7xl font-black mb-6">${album.title}</h1>
+                            <p class="text-sm"><span class="font-semibold">${album.artist}</span> • ${album.year} • ${album.songs.length} songs</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-6 mb-6">
+                        <button onclick="playAlbum(${album.id})" class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center hover:scale-105 transition play-button">
+                            <svg class="w-7 h-7 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <button onclick="toggleLikeAlbum(${album.id})" class="text-gray-400 hover:text-white">
+                            <svg class="w-8 h-8 ${isLiked ? 'text-green-500' : ''}" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                        </button>
+                        <button onclick="showAddToPlaylistMenu(${album.id})" class="text-gray-400 hover:text-white">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="bg-black bg-opacity-30 p-6 rounded-lg">
+                        ${album.songs.map((song, idx) => {
+                            const songId = `${album.id}-${idx}`;
+                            const isSongLiked = likedSongs.has(songId);
+                            return `
+                            <div class="flex items-center py-2 px-4 rounded hover:bg-white hover:bg-opacity-10 group cursor-pointer" onclick="playTrack(${album.id}, ${idx})">
+                                <span class="w-8 text-gray-400 text-sm group-hover:hidden">${idx + 1}</span>
+                                <svg class="w-8 h-4 text-white hidden group-hover:block" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                <div class="flex-1 ml-4">
+                                    <div class="font-semibold">${song.title}</div>
+                                    <div class="text-sm text-gray-400">${album.artist}</div>
+                                </div>
+                                <button onclick="event.stopPropagation(); toggleLikeSong(${album.id}, ${idx})" class="mx-8 opacity-0 group-hover:opacity-100">
+                                    <svg class="w-5 h-5 ${isSongLiked ? 'text-green-500' : 'text-gray-400'} hover:text-white" fill="${isSongLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                </button>
+                                <span class="w-16 text-right text-sm text-gray-400">${song.duration}</span>
+                            </div>
+                        `}).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Playback functions
+        function playAlbum(albumId) {
+            const album = albums.find(a => a.id === albumId);
+            if (album && album.driveLink) {
+                window.open(album.driveLink, '_blank');
+            }
+        }
+
+        function playTrack(albumId, songIdx) {
+            const album = albums.find(a => a.id === albumId);
+            if (album && album.driveLink) {
+                window.open(album.driveLink, '_blank');
+            }
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            } else {
+                audio.play();
+                isPlaying = true;
+            }
+            updatePlayButton();
+        }
+
+        function updatePlayButton() {
+            document.getElementById('playIcon').classList.toggle('hidden', isPlaying);
+            document.getElementById('pauseIcon').classList.toggle('hidden', !isPlaying);
+        }
+
+        function nextTrack() {
+            if (repeatMode === 2) {
+                audio.currentTime = 0;
+                audio.play();
+                return;
+            }
+            
+            if (queueIndex < queue.length - 1) {
+                queueIndex++;
+                const next = queue[queueIndex];
+                playTrack(next.albumId, next.songIdx);
+            } else if (repeatMode === 1) {
+                queueIndex = 0;
+                const next = queue[queueIndex];
+                playTrack(next.albumId, next.songIdx);
+            }
+        }
+
+        function previousTrack() {
+            if (audio.currentTime > 3) {
+                audio.currentTime = 0;
+            } else if (queueIndex > 0) {
+                queueIndex--;
+                const prev = queue[queueIndex];
+                playTrack(prev.albumId, prev.songIdx);
+            }
+        }
+
+        function shuffle() {
+            isShuffled = !isShuffled;
+            if (isShuffled && queue.length > 0) {
+                const current = queue[queueIndex];
+                queue = [...queue].sort(() => Math.random() - 0.5);
+                queueIndex = queue.findIndex(q => q.albumId === current.albumId && q.songIdx === current.songIdx);
+            }
+        }
+
+        function toggleRepeat() {
+            repeatMode = (repeatMode + 1) % 3;
+        }
+
+        function handleTrackEnd() {
+            nextTrack();
+        }
+
+        // Like functionality
+        function toggleLikeSong(albumId, songIdx) {
+            const songId = `${albumId}-${songIdx}`;
+            if (likedSongs.has(songId)) {
+                likedSongs.delete(songId);
+            } else {
+                likedSongs.add(songId);
+            }
+            saveLikedSongs();
+            updateLikeButton();
+            
+            // Refresh the current view to show updated like status
+            if (currentView === 'liked') {
+                showView('liked');
+            } else if (currentAlbum) {
+                // Refresh album view to show updated heart icons
+                showAlbum(currentAlbum.id);
+            }
+        }
+
+        function toggleLikeAlbum(albumId) {
+            const albumIdStr = albumId.toString();
+            if (likedAlbums.has(albumIdStr)) {
+                likedAlbums.delete(albumIdStr);
+            } else {
+                likedAlbums.add(albumIdStr);
+            }
+            saveLikedAlbums();
+            
+            // Refresh the current view to update the heart icon
+            showAlbum(albumId);
+        }
+
+        function showAddToPlaylistMenu(albumId) {
+            if (playlists.length === 0) {
+                alert('No playlists yet! Create a playlist first.');
+                return;
+            }
+            
+            const playlistOptions = playlists.map((p, idx) => `${idx + 1}. ${p.name}`).join('\n');
+            const selection = prompt(`Add to playlist:\n${playlistOptions}\n\nEnter playlist number:`);
+            
+            if (selection) {
+                const playlistIdx = parseInt(selection) - 1;
+                if (playlistIdx >= 0 && playlistIdx < playlists.length) {
+                    addAlbumToPlaylist(albumId, playlistIdx);
+                }
+            }
+        }
+
+        function addAlbumToPlaylist(albumId, playlistIdx) {
+            if (!playlists[playlistIdx].albums) {
+                playlists[playlistIdx].albums = [];
+            }
+            
+            if (!playlists[playlistIdx].albums.includes(albumId)) {
+                playlists[playlistIdx].albums.push(albumId);
+                savePlaylists();
+                alert('Album added to playlist!');
+            } else {
+                alert('Album already in this playlist!');
+            }
+        }
+
+        function toggleLike() {
+            if (currentTrack) {
+                toggleLikeSong(currentTrack.albumId, currentTrack.songIdx);
+            }
+        }
+
+        function updateLikeButton() {
+            if (!currentTrack) return;
+            const songId = `${currentTrack.albumId}-${currentTrack.songIdx}`;
+            const isLiked = likedSongs.has(songId);
+            const icon = document.getElementById('likeIcon');
+            
+            if (isLiked) {
+                icon.setAttribute('fill', 'currentColor');
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-green-500');
+            } else {
+                icon.setAttribute('fill', 'none');
+                icon.classList.remove('text-green-500');
+                icon.classList.add('text-gray-400');
+            }
+        }
+
+        // Progress and time
+        function updateProgress() {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('progressFill').style.width = percent + '%';
+                document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+            }
+        }
+
+        function updateTotalTime() {
+            document.getElementById('totalTime').textContent = formatTime(audio.duration);
+        }
+
+        function seekTo(event) {
+            const bar = event.currentTarget;
+            const percent = event.offsetX / bar.offsetWidth;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function setVolume(value) {
+            audio.volume = value / 100;
+        }
+
+        // Playlist management
+        function createPlaylist() {
+            const name = prompt('Enter playlist name:');
+            if (name) {
+                playlists.push({name, albums: []});
+                savePlaylists();
+                updatePlaylistSidebar();
+                showView('library');
+            }
+        }
+
+        function showPlaylist(playlistIdx) {
+            const playlist = playlists[playlistIdx];
+            const playlistAlbums = playlist.albums.map(id => albums.find(a => a.id === id)).filter(a => a);
+            
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="liked-gradient p-8">
+                    <div class="flex items-end space-x-6 mb-8">
+                        <div class="w-60 h-60 bg-gradient-to-br from-purple-800 to-blue-400 rounded shadow-2xl flex items-center justify-center">
+                            <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold mb-2">PLAYLIST</p>
+                            <h1 class="text-7xl font-black mb-6">${playlist.name}</h1>
+                            <p class="text-sm"><span class="font-semibold">${playlist.albums.length} albums</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-black bg-opacity-30 p-8 rounded-lg">
+                        ${playlistAlbums.length === 0 ? '<p class="text-gray-400 text-center py-12">No albums in this playlist yet.</p>' : ''}
+                        <div class="grid grid-cols-6 gap-4">
+                            ${playlistAlbums.map(album => `
+                                <div class="bg-gray-900 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition cursor-pointer group" onclick="showAlbum(${album.id})">
+                                    <div class="relative mb-4">
+                                        <img src="${album.cover}" class="w-full aspect-square rounded-md" alt="${album.title}">
+                                        <button class="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition play-button" onclick="event.stopPropagation(); playAlbum(${album.id})">
+                                            <svg class="w-6 h-6 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                        </button>
+                                    </div>
+                                    <h3 class="font-semibold truncate mb-1">${album.title}</h3>
+                                    <p class="text-sm text-gray-400 truncate">${album.artist}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePlaylistSidebar() {
+            const sidebar = document.getElementById('playlistSidebar');
+            sidebar.innerHTML = playlists.map((playlist, idx) => `
+                <a href="#" onclick="showPlaylist(${idx})" class="block text-sm text-gray-400 hover:text-white py-1">
+                    ${playlist.name}
+                </a>
+            `).join('');
+        }
+
+        // Storage
+        function saveLikedSongs() {
+            localStorage.setItem('likedSongs', JSON.stringify(Array.from(likedSongs)));
+        }
+
+        function loadLikedSongs() {
+            const saved = localStorage.getItem('likedSongs');
+            if (saved) {
+                likedSongs = new Set(JSON.parse(saved));
+            }
+        }
+
+        function saveLikedAlbums() {
+            localStorage.setItem('likedAlbums', JSON.stringify(Array.from(likedAlbums)));
+        }
+
+        function loadLikedAlbums() {
+            const saved = localStorage.getItem('likedAlbums');
+            if (saved) {
+                likedAlbums = new Set(JSON.parse(saved));
+            }
+        }
+
+        function savePlaylists() {
+            localStorage.setItem('playlists', JSON.stringify(playlists));
+        }
+
+        function loadPlaylists() {
+            const saved = localStorage.getItem('playlists');
+            if (saved) {
+                playlists = JSON.parse(saved);
+                updatePlaylistSidebar();
+            }
+        }
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
